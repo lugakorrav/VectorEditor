@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor;
+package com.mycompany.vectoreditor;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -53,9 +53,9 @@ public class Canvas extends JPanel {
         mouseMotionAdapters.clear();
     }
 
-    public void resizeFigure(Figure f) {
+    public void resizeFigure(final Figure f) {
 
-        MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
+        final MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
 
             int figureX = f.getX();
             int figureY = f.getY();
@@ -96,7 +96,7 @@ public class Canvas extends JPanel {
         mouseAdapters.add(releaseAdapter);
     }
 
-    public void createFigure(Figure af) {
+    public void createFigure(final Figure af) {
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
             Figure f;

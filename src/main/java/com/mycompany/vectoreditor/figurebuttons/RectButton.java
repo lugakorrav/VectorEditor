@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor.figurebuttons;
+package com.mycompany.vectoreditor.figurebuttons;
 
 import java.awt.Graphics;
-import vectoreditor.FigureButton;
-import vectoreditor.MainFrame;
-import vectoreditor.primitives.Rectangle;
+import com.mycompany.vectoreditor.FigureButton;
+import com.mycompany.vectoreditor.MainFrame;
+import com.mycompany.vectoreditor.primitives.Rectangle;
 
 /**
  *

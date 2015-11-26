@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor;
+package com.mycompany.vectoreditor;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import vectoreditor.figurebuttons.OvalButton;
-import vectoreditor.figurebuttons.RectButton;
+import com.mycompany.vectoreditor.figurebuttons.OvalButton;
+import com.mycompany.vectoreditor.figurebuttons.RectButton;
 
 /**
  *

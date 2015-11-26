@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor.primitives;
+package com.mycompany.vectoreditor.primitives;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import vectoreditor.Figure;
+import com.mycompany.vectoreditor.Figure;
 
 /**
  *
