@@ -22,10 +22,11 @@ public class FigureButton extends JButton {
     protected FigureButton(MainFrame aparent, final Figure f) {
         super();
         parent = aparent;
-        setPreferredSize(new Dimension(16, 16));
+        setPreferredSize(new Dimension(24, 24));
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                
                 parent.setMode(MainFrame.MODE.RECT);
                 parent.removeAdapters();
                 parent.createFigure(f);

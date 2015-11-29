@@ -5,27 +5,28 @@
  */
 package com.mycompany.vectoreditor.figurebuttons;
 
-import java.awt.Graphics;
 import com.mycompany.vectoreditor.FigureButton;
 import com.mycompany.vectoreditor.MainFrame;
+import com.mycompany.vectoreditor.primitives.Line;
 import com.mycompany.vectoreditor.primitives.Oval;
+import java.awt.Graphics;
 
 /**
  *
  * @author Гриха
  */
-public class OvalButton extends FigureButton {
+public class LineButton extends FigureButton {
 
-    public OvalButton(MainFrame aparent) {
-        super(aparent, new Oval());
+    public LineButton(MainFrame aparent) {
+        super(aparent, new Line());
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        int width = getWidth()/2;
-        int x = (getWidth() - width)/2;
-        int height = getHeight()/2;
-        int y = (getHeight()- height)/2;
-        g.fillOval(x, y, width, height);
+        int width = getWidth() / 2;
+        int x = (getWidth() - width) / 2;
+        int height = getHeight() / 2;
+        int y = (getHeight() - height) / 2;
+        g.drawLine(x, y, x + width, y + height);
     }
 }

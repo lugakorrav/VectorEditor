@@ -8,6 +8,7 @@ package com.mycompany.vectoreditor.primitives;
 import java.awt.Color;
 import java.awt.Graphics;
 import com.mycompany.vectoreditor.Figure;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -15,21 +16,38 @@ import com.mycompany.vectoreditor.Figure;
  */
 public class Oval extends Figure {
 
-    public Oval(int ax, int ay, int awidth, int aheight, Color c) {
-        super(ax, ay, awidth, aheight, c);
+    public Oval(int beginX, int beginY, int endX, int endY, Color color) {
+        super(beginX, beginY, endX, endY, color);
     }
 
     public Oval() {
         super();
     }
-    
+
     @Override
     public Oval clone() throws CloneNotSupportedException {
-        return (Oval)super.clone();
+        return (Oval) super.clone();
     }
 
+    @Override
     public void paint(Graphics g) {
-        g.setColor(color);
-        g.fillOval(x, y, width, height);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(color);
+        g2d.setStroke(stroke);
+        int x, y;
+        int width = endX - beginX;
+        int height = endY - beginY;
+
+        if (width < 0) {
+            x = endX;
+        } else {
+            x = beginX;
+        }
+        if (height < 0) {
+            y = endY;
+        } else {
+            y = beginY;
+        }
+        g2d.drawOval(x, y, Math.abs(width), Math.abs(height));
     }
 }

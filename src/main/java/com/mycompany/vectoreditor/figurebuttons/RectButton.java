@@ -22,6 +22,10 @@ public class RectButton extends FigureButton {
 
     public void paint(Graphics g) {
         super.paint(g);
-        g.fillRect(4, 4, 8, 8);
+        int width = getWidth()/2;
+        int x = (getWidth() - width)/2;
+        int height = getHeight()/2;
+        int y = (getHeight()- height)/2;
+        g.fillRect(x, y, width, height);
     }
 }
