@@ -103,6 +103,7 @@ public class Canvas extends JPanel {
 
                 f.setColor(parent.getColor());
                 f.setStroke(parent.getStroke());
+                f.setFilled(parent.isFilled());
                 
                 f.setBeginX(e.getX());
                 f.setBeginY(e.getY());

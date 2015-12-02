@@ -16,7 +16,7 @@ public class VectorEditor {
         SwingUtilities.invokeLater(new Runnable () {
             @Override
             public void run() {
-                new MainFrame("Vector Editor");
+                new MainFrame("Abobe PhotoChop");
             }
         });
     }

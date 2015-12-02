@@ -18,10 +18,12 @@ public class Oval extends Figure {
 
     public Oval(int beginX, int beginY, int endX, int endY, Color color) {
         super(beginX, beginY, endX, endY, color);
+        type = new String("Oval");
     }
 
     public Oval() {
         super();
+        type = new String("Oval");
     }
 
     @Override
@@ -31,9 +33,8 @@ public class Oval extends Figure {
 
     @Override
     public void paint(Graphics g) {
+        super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(color);
-        g2d.setStroke(stroke);
         int x, y;
         int width = endX - beginX;
         int height = endY - beginY;
@@ -48,6 +49,10 @@ public class Oval extends Figure {
         } else {
             y = beginY;
         }
-        g2d.drawOval(x, y, Math.abs(width), Math.abs(height));
+        if (filled) {
+            g2d.fillOval(x, y, Math.abs(width), Math.abs(height));
+        } else {
+            g2d.drawOval(x, y, Math.abs(width), Math.abs(height));
+        }
     }
 }

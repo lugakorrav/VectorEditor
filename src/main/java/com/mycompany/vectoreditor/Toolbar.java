@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import com.mycompany.vectoreditor.figurebuttons.OvalButton;
 import com.mycompany.vectoreditor.figurebuttons.RectButton;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -85,16 +84,27 @@ public class Toolbar extends JPanel {
         strokeSet.add(storokeLabel);
         add(strokeSet);
         
-        JPanel paintSet = new JPanel();
+        JPanel fillSet = new JPanel();
         final JCheckBox checkBox = new JCheckBox();
         checkBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checkBox.isSelected()) {
-                    
+                    parent.setFilled(Boolean.TRUE);
+                }
+                else {
+                    parent.setFilled(Boolean.FALSE);
                 }
             }
         });
+        JLabel fillLabel = new JLabel("filled");
+        BoxLayout fillSetLayout = new BoxLayout(fillSet, BoxLayout.Y_AXIS);
+        fillSet.setLayout(fillSetLayout);
+        fillSet.add(checkBox);
+        fillSet.add(fillLabel);
+        
+        add(fillSet);
+        
     }
 }

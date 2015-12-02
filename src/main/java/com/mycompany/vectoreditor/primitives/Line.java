@@ -18,10 +18,12 @@ public class Line extends Figure {
 
     public Line(int beginX, int beginY, int endX, int endY, Color color) {
         super(beginX, beginY, endX, endY, color);
+        type = new String("Line");
     }
 
     public Line() {
         super();
+        type = new String("Line");
     }
 
     @Override
@@ -31,9 +33,8 @@ public class Line extends Figure {
 
     @Override
     public void paint(Graphics g) {
+        super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(color);
-        g2d.setStroke(stroke);
 
         g2d.drawLine(beginX, beginY, endX, endY);
     }

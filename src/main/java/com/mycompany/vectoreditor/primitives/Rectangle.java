@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import com.mycompany.vectoreditor.Figure;
+import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 
 /**
@@ -19,10 +20,12 @@ public class Rectangle extends Figure {
 
     public Rectangle(int beginX, int beginY, int endX, int endY, Color color) {
         super(beginX, beginY, endX, endY, color);
+        type = new String("Rectangle");
     }
 
     public Rectangle() {
         super();
+        type = new String("Rectangle");
     }
 
     @Override
@@ -32,10 +35,8 @@ public class Rectangle extends Figure {
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.setColor(color);
-        g2d.setStroke(stroke);
-        
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
         int x, y;
         int width = endX - beginX;
         int height = endY - beginY;
@@ -50,6 +51,10 @@ public class Rectangle extends Figure {
         } else {
             y = beginY;
         }
-        g2d.drawRect(x, y, Math.abs(width), Math.abs(height));
+        if (filled) {
+            g2d.fillRect(x, y, Math.abs(width), Math.abs(height));
+        } else {
+            g2d.drawRect(x, y, Math.abs(width), Math.abs(height));
+        }
     }
 }
