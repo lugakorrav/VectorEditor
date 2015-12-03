@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor;
+package com.mycompany.vectoreditor;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -19,13 +19,14 @@ public class FigureButton extends JButton {
 
     protected MainFrame parent;
 
-    protected FigureButton(MainFrame aparent, Figure f) {
+    protected FigureButton(MainFrame aparent, final Figure f) {
         super();
         parent = aparent;
-        setPreferredSize(new Dimension(16, 16));
+        setPreferredSize(new Dimension(24, 24));
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                
                 parent.setMode(MainFrame.MODE.RECT);
                 parent.removeAdapters();
                 parent.createFigure(f);

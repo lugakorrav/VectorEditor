@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vectoreditor;
+package com.mycompany.vectoreditor;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -20,7 +21,7 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
 
     private final MainFrame parent;
-    
+
     private ArrayList<MouseAdapter> mouseAdapters;
     private ArrayList<MouseMotionAdapter> mouseMotionAdapters;
 
@@ -30,6 +31,7 @@ public class Canvas extends JPanel {
         mouseAdapters = new ArrayList<MouseAdapter>();
         mouseMotionAdapters = new ArrayList<MouseMotionAdapter>();
         setBackground(Color.white);
+        setBorder(new LineBorder(Color.GRAY));
     }
 
     @Override
@@ -41,7 +43,7 @@ public class Canvas extends JPanel {
             }
         }
     }
-    
+
     public void removeAdapters() {
         for (MouseAdapter elem : mouseAdapters) {
             removeMouseListener(elem);
@@ -53,29 +55,17 @@ public class Canvas extends JPanel {
         mouseMotionAdapters.clear();
     }
 
-    public void resizeFigure(Figure f) {
+    public void resizeFigure(final Figure f) {
 
-        MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
+        final MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
 
             int figureX = f.getX();
             int figureY = f.getY();
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                int width = e.getX() - figureX;
-                int height = e.getY() - figureY;
-                if (width < 0) {
-                    f.setX(e.getX());
-                } else {
-                    f.setX(figureX);
-                }
-                if (height < 0) {
-                    f.setY(e.getY());
-                } else {
-                    f.setY(figureY);
-                }
-                f.setWidth(Math.abs(width));
-                f.setHeight(Math.abs(height));
+                f.setEndX(e.getX());
+                f.setEndY(e.getY());
                 repaint();
             }
         };
@@ -96,7 +86,7 @@ public class Canvas extends JPanel {
         mouseAdapters.add(releaseAdapter);
     }
 
-    public void createFigure(Figure af) {
+    public void createFigure(final Figure af) {
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
             Figure f;
@@ -111,12 +101,24 @@ public class Canvas extends JPanel {
                     };
                 }
 
+                f.setColor(parent.getColor());
+                f.setStroke(parent.getStroke());
+                f.setFilled(parent.isFilled());
+                
+                f.setBeginX(e.getX());
+                f.setBeginY(e.getY());
+                f.setEndX(e.getX());
+                f.setEndY(e.getY());
+
                 parent.addFigure(f);
 
-                f.setX(e.getX());
-                f.setY(e.getY());
+                repaint();
 
                 resizeFigure(f);
+            }
+
+            public void mouseClicked(MouseEvent e) {
+
             }
         };
         addMouseListener(mouseAdapter);
