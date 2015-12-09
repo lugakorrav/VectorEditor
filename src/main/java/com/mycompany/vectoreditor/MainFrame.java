@@ -23,7 +23,6 @@ public class MainFrame extends JFrame {
     private Toolbar toolbar;
     private EditPanel editPanel;
     private ColorDialog colorDialog;
-    private Dimension buttonDimension;
 
     private LinkedList<Figure> figures;
 
@@ -39,6 +38,8 @@ public class MainFrame extends JFrame {
     private Color mainColor;
     private BasicStroke mainStroke;
     private boolean filled;
+    private Figure selectedFigure;
+    private Dimension buttonDimension;
 
     public MainFrame(String s) {
         super(s);
@@ -100,12 +101,12 @@ public class MainFrame extends JFrame {
     public void setStroke(BasicStroke stroke) {
         this.mainStroke = stroke;
     }
-    
+
     public Boolean isFilled() {
         return filled;
     }
-    
-    public void setFilled (Boolean b) {
+
+    public void setFilled(Boolean b) {
         filled = b;
     }
 
@@ -119,11 +120,40 @@ public class MainFrame extends JFrame {
 
     public void clear() {
         figures.clear();
+        editPanel.clear();
         canvas.repaint();
     }
 
-    public void removeAdapters() {
-        canvas.removeAdapters();
+    public void removeCreatingAdapters() {
+        canvas.removeCreatingAdapters();
+    }
+
+    public void removeEditingAdapters() {
+        canvas.removeEditingAdapters();
+    }
+
+    public void setSelectedFigure(int index) throws CloneNotSupportedException {
+        if (selectedFigure != null) {
+            selectedFigure.setSelected(false);
+        }
+        if (index == -1) {
+            selectedFigure = null;
+            return;
+        }
+
+        selectedFigure = figures.get(index);
+        selectedFigure.setSelected(true);
+        System.out.println(index);
+    }
+
+    public Figure getSelectedFigure() {
+        return selectedFigure;
+    }
+    
+    public void clearSelection() {
+        selectedFigure = null;
+        editPanel.clearSelection();
+        canvas.repaint();
     }
 
 }

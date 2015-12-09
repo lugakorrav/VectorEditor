@@ -52,6 +52,8 @@ public class Toolbar extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parent.clear();
+                parent.removeCreatingAdapters();
+                parent.removeEditingAdapters();
             }
         });
         add(clearButton);

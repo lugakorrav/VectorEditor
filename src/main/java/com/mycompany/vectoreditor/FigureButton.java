@@ -28,7 +28,9 @@ public class FigureButton extends JButton {
             public void actionPerformed(ActionEvent e) {
                 
                 parent.setMode(MainFrame.MODE.RECT);
-                parent.removeAdapters();
+                parent.removeCreatingAdapters();
+                parent.removeEditingAdapters();
+                parent.clearSelection();
                 parent.createFigure(f);
             }
         });
