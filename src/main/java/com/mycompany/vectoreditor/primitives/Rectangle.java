@@ -7,9 +7,7 @@ package com.mycompany.vectoreditor.primitives;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import com.mycompany.vectoreditor.Figure;
-import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 
 /**

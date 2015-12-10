@@ -14,11 +14,9 @@ import javax.swing.JPanel;
 import com.mycompany.vectoreditor.figurebuttons.OvalButton;
 import com.mycompany.vectoreditor.figurebuttons.RectButton;
 import java.awt.BasicStroke;
-import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -44,20 +42,7 @@ public class Toolbar extends JPanel {
         add(rectButton);
         add(ovalButton);
         add(lineButton);
-
-        JButton clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(parent.GetButtonDimension());
-        clearButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parent.clear();
-                parent.removeCreatingAdapters();
-                parent.removeEditingAdapters();
-            }
-        });
-        add(clearButton);
-
+        
         JButton colorButton = new JButton("Color");
         colorButton.setPreferredSize(parent.GetButtonDimension());
         colorButton.addActionListener(new ActionListener() {
@@ -107,6 +92,19 @@ public class Toolbar extends JPanel {
         fillSet.add(fillLabel);
         
         add(fillSet);
+        
+        JButton clearButton = new JButton("Clear");
+        clearButton.setPreferredSize(parent.GetButtonDimension());
+        clearButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.clear();
+                parent.removeCreatingAdapters();
+                parent.removeEditingAdapters();
+            }
+        });
+        add(clearButton);
         
     }
 }

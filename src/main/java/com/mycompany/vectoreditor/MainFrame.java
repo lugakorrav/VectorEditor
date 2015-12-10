@@ -9,12 +9,8 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Paint;
 import java.util.LinkedList;
 import javax.swing.*;
-import javax.swing.colorchooser.ColorSelectionModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -57,9 +53,11 @@ public class MainFrame extends JFrame {
         editPanel = new EditPanel(this);
 
         setSize(800, 600);
+        setMinimumSize(new Dimension(400, 400));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        BorderLayout borderLayout = new BorderLayout();
+        setLayout(borderLayout);
 
         add(canvas, BorderLayout.CENTER);
         add(toolbar, BorderLayout.NORTH);
