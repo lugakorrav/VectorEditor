@@ -31,6 +31,8 @@ public class Canvas extends JPanel {
     private ArrayList<MouseAdapter> editingMouseAdapters;
     private ArrayList<MouseMotionAdapter> editingMouseMotionAdapters;
 
+    private int borderTwinkleRate = 200;
+
     public Canvas(MainFrame c) {
         super();
         parent = c;
@@ -53,7 +55,7 @@ public class Canvas extends JPanel {
             }
         };
 
-        Timer timer = new Timer(250, timerListener);
+        Timer timer = new Timer(borderTwinkleRate, timerListener);
         timer.start();
 
     }
@@ -94,12 +96,12 @@ public class Canvas extends JPanel {
         editingMouseMotionAdapters.clear();
     }
 
-    public void resizeFigure(final Figure f) {
+    private void resizeFigure(final Figure f) {
 
         final MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
 
-            int figureX = f.getX();
-            int figureY = f.getY();
+            int figureX = f.getBeginX();
+            int figureY = f.getBeginY();
 
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -123,6 +125,43 @@ public class Canvas extends JPanel {
 
         addMouseListener(releaseAdapter);
         creatingMouseAdapters.add(releaseAdapter);
+    }
+
+    private void moveFigure(final Figure f) {
+        final MouseMotionAdapter dragAdapter = new MouseMotionAdapter() {
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int BeginX = f.getBeginX();
+                int BeginY = f.getBeginY();
+                int EndX = f.getEndX();
+                int EndY = f.getEndY();
+                int centerX = (BeginX + EndX) / 2;
+                int centerY = (BeginY + EndY) / 2;
+                int dx = e.getX() - centerX;
+                int dy = e.getY() - centerY;
+                f.setBeginX(BeginX + dx);
+                f.setBeginY(BeginY + dy);
+                f.setEndX(EndX + dx);
+                f.setEndY(EndY + dy);
+                repaint();
+            }
+        };
+
+        addMouseMotionListener(dragAdapter);
+        editingMouseMotionAdapters.add(dragAdapter);
+
+        MouseAdapter releaseAdapter = new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                removeMouseMotionListener(dragAdapter);
+                removeMouseListener(this);
+            }
+        };
+
+        addMouseListener(releaseAdapter);
+        editingMouseAdapters.add(releaseAdapter);
     }
 
     public void createFigure(final Figure af) {
@@ -162,5 +201,26 @@ public class Canvas extends JPanel {
         };
         addMouseListener(mouseAdapter);
         creatingMouseAdapters.add(mouseAdapter);
+    }
+
+    public void editFigure() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            Figure selected = parent.getSelectedFigure();
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if ((e.getButton() == MouseEvent.BUTTON1) && (contains(e.getPoint()))) {
+                    if (selected.cornerHandleContains(e.getX(), e.getY())) {
+                        resizeFigure(selected);
+                    } else {
+                        if (selected.centerHandleContains(e.getX(), e.getY())) {
+                            moveFigure(selected);
+                        }
+                    }
+                }
+            }
+        };
+        addMouseListener(mouseAdapter);
+        editingMouseAdapters.add(mouseAdapter);
     }
 }

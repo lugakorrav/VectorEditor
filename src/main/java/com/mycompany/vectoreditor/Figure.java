@@ -23,9 +23,11 @@ public class Figure implements Cloneable {
     protected String type;
     protected boolean selected;
 
-    private int handleRadius = 5;
+    private int handleRadius = 8;
     private Color dashColor = Color.BLUE;
     private Color solidColor = Color.WHITE;
+    private Color handleFilledColor = Color.GREEN;
+    private Color handleBorderColor = Color.BLACK;
 
     protected int beginX, beginY, endX, endY;
 
@@ -92,22 +94,46 @@ public class Figure implements Cloneable {
         this.selected = b;
     }
 
-    public int getX() {
+    public int getBeginX() {
         return beginX;
     }
 
-    public int getY() {
+    public int getBeginY() {
         return beginY;
+    }
+
+    public int getEndX() {
+        return endX;
+    }
+
+    public int getEndY() {
+        return endY;
     }
 
     public String getType() {
         return type;
     }
 
+    public int getHandleRadius() {
+        return handleRadius;
+    }
+
     public void swapColors() {
         Color c = new Color(dashColor.getRGB());
         dashColor = new Color(solidColor.getRGB());
         solidColor = new Color(c.getRGB());
+    }
+
+    public boolean cornerHandleContains(int x, int y) {
+        int dx = Math.abs(x - endX);
+        int dy = Math.abs(y - endY);
+        return (Math.pow(dx, 2) + Math.pow(dy, 2) < handleRadius);
+    }
+
+    public boolean centerHandleContains(int x, int y) {
+        int dx = Math.abs(x - (endX + beginX) / 2);
+        int dy = Math.abs(y - (endY + beginY) / 2);
+        return (Math.pow(dx, 2) + Math.pow(dy, 2) < handleRadius);
     }
 
     public void paintBorder(Graphics g) {
@@ -125,7 +151,7 @@ public class Figure implements Cloneable {
         } else {
             y = beginY;
         }
-        
+
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke());
         g2d.setColor(solidColor);
@@ -134,6 +160,16 @@ public class Figure implements Cloneable {
         g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE,
                 BasicStroke.JOIN_MITER, 1, new float[]{8}, 0));
         g2d.drawRect(x, y, Math.abs(width), Math.abs(height));
+
         g2d.setStroke(new BasicStroke());
+        g2d.setColor(handleFilledColor);
+        int offset = handleRadius / 2;
+        g2d.fillOval(endX - offset, endY - offset, handleRadius, handleRadius);
+        g2d.fillOval((endX + beginX) / 2 - offset,
+                (endY + beginY) / 2 - offset, handleRadius, handleRadius);
+        g2d.setColor(handleBorderColor);
+        g2d.drawOval(endX - offset, endY - offset, handleRadius, handleRadius);
+        g2d.drawOval((endX + beginX) / 2 - offset,
+                (endY + beginY) / 2 - offset, handleRadius, handleRadius);
     }
 }

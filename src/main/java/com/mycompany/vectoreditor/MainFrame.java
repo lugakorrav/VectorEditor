@@ -155,5 +155,9 @@ public class MainFrame extends JFrame {
         editPanel.clearSelection();
         canvas.repaint();
     }
+    
+    public void editFigure() {
+        canvas.editFigure();
+    }
 
 }

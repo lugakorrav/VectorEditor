@@ -54,6 +54,9 @@ public class EditPanel extends JPanel {
                     parent.setSelectedFigure(figureList.getSelectedIndex());
                 } catch (CloneNotSupportedException ex) {
                 }
+                if (figureList.getSelectedIndex() != -1) {
+                    parent.editFigure();
+                }
             }
         });
 
@@ -71,7 +74,7 @@ public class EditPanel extends JPanel {
     public void clear() {
         figureDefList.clear();
     }
-    
+
     public void clearSelection() {
         figureList.clearSelection();
     }
