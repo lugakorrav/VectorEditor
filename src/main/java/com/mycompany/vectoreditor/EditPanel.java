@@ -8,7 +8,6 @@ package com.mycompany.vectoreditor;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -16,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -46,7 +45,7 @@ public class EditPanel extends JPanel {
     public EditPanel(final MainFrame parent) {
         super();
         this.parent = parent;
-        FlowLayout editPanelLayout = new FlowLayout(FlowLayout.LEFT, 4, 4);
+        BoxLayout editPanelLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(editPanelLayout);
         setPreferredSize(new Dimension(134, 512));
 
@@ -54,14 +53,13 @@ public class EditPanel extends JPanel {
         figureList = new JList<String>(figureDefList);
         figureList.setBorder(new LineBorder(Color.GRAY));
         scrollpane = new JScrollPane(figureList);
-        scrollpane.setPreferredSize(new Dimension(128, 200));
+        scrollpane.setPreferredSize(new Dimension(128, 256));
         add(scrollpane);
 
         final JPanel editPanel = new JPanel();
-        BorderLayout borderLayout = new BorderLayout();
-        editPanel.setLayout(borderLayout);
-        Component rigidArea = Box.createRigidArea(new Dimension(128, 128));
-        editPanel.add(rigidArea);
+        FlowLayout flowLayout = new FlowLayout();
+        editPanel.setLayout(flowLayout);
+        editPanel.setPreferredSize(new Dimension(128, 128));
         add(editPanel);
 
         final JButton colorButton = new JButton("Color");
@@ -93,7 +91,6 @@ public class EditPanel extends JPanel {
         strokeSet.setLayout(strokeSetLayout);
         strokeSet.add(strokeSpinner);
         strokeSet.add(strokeLabel);
-        strokeSet.setAlignmentX(TOP_ALIGNMENT);
         editPanel.add(strokeSet, BorderLayout.SOUTH);
 
         final JCheckBox checkBox = new JCheckBox("filled");
