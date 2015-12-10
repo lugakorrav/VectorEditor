@@ -64,7 +64,7 @@ public class Toolbar extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                parent.showColorFrame();
+                parent.setMainColor();
             }
         });
         add(colorButton);
@@ -79,11 +79,11 @@ public class Toolbar extends JPanel {
                 parent.setStroke(new BasicStroke((int) strokeSpinner.getValue()));
             }
         });
-        JLabel storokeLabel = new JLabel("thickness");
+        JLabel strokeLabel = new JLabel("thickness");
         BoxLayout strokeSetLayout = new BoxLayout(strokeSet, BoxLayout.Y_AXIS);
         strokeSet.setLayout(strokeSetLayout);
         strokeSet.add(strokeSpinner);
-        strokeSet.add(storokeLabel);
+        strokeSet.add(strokeLabel);
         add(strokeSet);
         
         JPanel fillSet = new JPanel();

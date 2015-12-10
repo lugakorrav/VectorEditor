@@ -12,6 +12,9 @@ import java.awt.Dimension;
 import java.awt.Paint;
 import java.util.LinkedList;
 import javax.swing.*;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -22,7 +25,6 @@ public class MainFrame extends JFrame {
     private Canvas canvas;
     private Toolbar toolbar;
     private EditPanel editPanel;
-    private ColorDialog colorDialog;
 
     private LinkedList<Figure> figures;
 
@@ -53,7 +55,6 @@ public class MainFrame extends JFrame {
         canvas = new Canvas(this);
         toolbar = new Toolbar(this);
         editPanel = new EditPanel(this);
-        colorDialog = new ColorDialog(this);
 
         setSize(800, 600);
         setVisible(true);
@@ -86,12 +87,39 @@ public class MainFrame extends JFrame {
         mode = m;
     }
 
-    public Color getColor() {
+    public Color getMainColor() {
         return mainColor;
     }
 
-    public void setColor(Color color) {
-        this.mainColor = color;
+    public void setMainColor() {
+        Color color = JColorChooser.showDialog(null,
+                "Choose the color", mainColor);
+        if (color != null) {
+            mainColor = color;
+        }
+    }
+
+    public void setFigureColor() {
+        Color color = JColorChooser.showDialog(null,
+                "Choose the color", selectedFigure.getColor());
+        if (color != null && selectedFigure != null) {
+            selectedFigure.setColor(color);
+            canvas.repaint();
+        }
+    }
+
+    public void setFigureStroke(BasicStroke stroke) {
+        if (selectedFigure != null) {
+            selectedFigure.setStroke(stroke);
+            canvas.repaint();
+        }
+    }
+
+    public void setFigureFilled(boolean b) {
+        if (selectedFigure != null) {
+            selectedFigure.setFilled(b);
+            canvas.repaint();
+        }
     }
 
     public BasicStroke getStroke() {
@@ -112,10 +140,6 @@ public class MainFrame extends JFrame {
 
     public Dimension GetButtonDimension() {
         return buttonDimension;
-    }
-
-    public void showColorFrame() {
-        colorDialog.setVisible(true);
     }
 
     public void clear() {
@@ -149,13 +173,13 @@ public class MainFrame extends JFrame {
     public Figure getSelectedFigure() {
         return selectedFigure;
     }
-    
+
     public void clearSelection() {
         selectedFigure = null;
         editPanel.clearSelection();
         canvas.repaint();
     }
-    
+
     public void editFigure() {
         canvas.editFigure();
     }

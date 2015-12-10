@@ -117,6 +117,18 @@ public class Figure implements Cloneable {
     public int getHandleRadius() {
         return handleRadius;
     }
+    
+    public Color getColor () {
+        return color;
+    }
+    
+    public BasicStroke getStroke() {
+        return stroke;
+    }
+    
+    public boolean isFilled() {
+        return filled;
+    }
 
     public void swapColors() {
         Color c = new Color(dashColor.getRGB());
