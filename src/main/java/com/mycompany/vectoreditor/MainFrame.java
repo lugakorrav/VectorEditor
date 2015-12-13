@@ -145,9 +145,9 @@ public class MainFrame extends JFrame {
         editPanel.clear();
         canvas.repaint();
     }
-    
-    public void deleteSelectedFigure() {
-        figures.remove(selectedFigure);
+
+    public void deleteSelectedFigure(int index) {
+        System.out.println(figures.remove(index));
         selectedFigure = null;
         canvas.repaint();
     }
@@ -172,6 +172,11 @@ public class MainFrame extends JFrame {
         selectedFigure = figures.get(index);
         selectedFigure.setSelected(true);
         System.out.println(index);
+    }
+
+    public void changeLayer(int oldLayer, int newLayer) {
+        figures.add(newLayer, selectedFigure);
+        figures.remove(oldLayer);
     }
 
     public Figure getSelectedFigure() {

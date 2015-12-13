@@ -24,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -41,6 +42,7 @@ public class EditPanel extends JPanel {
     JList<String> figureList;
     DefaultListModel<String> figureDefList;
     JScrollPane scrollpane;
+    SpinnerNumberModel layerSpinnerModel;
 
     public EditPanel(final MainFrame parent) {
         super();
@@ -76,14 +78,14 @@ public class EditPanel extends JPanel {
 
         JPanel strokeSet = new JPanel();
         final JSpinner strokeSpinner = new JSpinner();
+        strokeSpinner.setPreferredSize(parent.GetButtonDimension());
         strokeSpinner.setEnabled(false);
-        strokeSpinner.setSize(strokeSet.getMinimumSize());
         strokeSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
         strokeSpinner.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
-                parent.setFigureStroke(new BasicStroke((int)strokeSpinner.getValue()));
+                parent.setFigureStroke(new BasicStroke((int) strokeSpinner.getValue()));
             }
         });
         JLabel strokeLabel = new JLabel("thickness");
@@ -108,6 +110,39 @@ public class EditPanel extends JPanel {
         });
         editPanel.add(checkBox, BorderLayout.CENTER);
 
+        final JButton deleteButton = new JButton("Delete");
+        deleteButton.setEnabled(false);
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.deleteSelectedFigure(figureList.getSelectedIndex());
+                figureDefList.remove(figureList.getSelectedIndex());
+            }
+        });
+        editPanel.add(deleteButton);
+
+        JPanel layerPanel = new JPanel();
+        layerSpinnerModel = new SpinnerNumberModel(0, 0, 0, 1);
+        final JSpinner layerSpinner = new JSpinner(layerSpinnerModel);
+        layerSpinner.setPreferredSize(parent.GetButtonDimension());
+        layerSpinner.setEnabled(false);
+        layerSpinner.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int selectedIndex = figureList.getSelectedIndex();
+                int newIndex = (int) layerSpinner.getValue();
+                parent.changeLayer(selectedIndex, newIndex);
+                figureList.setSelectedIndex(newIndex);
+            }
+        });
+        JLabel layerLabel = new JLabel("layer");
+        GridLayout layerSetLayout = new GridLayout(2, 1, 0, 0);
+        layerPanel.setLayout(layerSetLayout);
+        layerPanel.add(layerSpinner);
+        layerPanel.add(layerLabel);
+        editPanel.add(layerPanel, BorderLayout.SOUTH);
+
         figureList.addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -116,20 +151,26 @@ public class EditPanel extends JPanel {
                     parent.setSelectedFigure(figureList.getSelectedIndex());
                 } catch (CloneNotSupportedException ex) {
                 }
-                if (figureList.getSelectedIndex() != -1) {
+                int selectedIndex = figureList.getSelectedIndex();
+                if (selectedIndex != -1) {
                     parent.editFigure();
                     colorButton.setEnabled(true);
                     strokeSpinner.setEnabled(true);
                     checkBox.setEnabled(true);
+                    deleteButton.setEnabled(true);
+                    layerSpinner.setEnabled(true);
 
                     Figure selected = parent.getSelectedFigure();
                     strokeSpinner.setValue((int) selected.getStroke().getLineWidth());
                     checkBox.setSelected(selected.isFilled());
+                    layerSpinner.setValue(selectedIndex);
                 } else {
                     colorButton.setEnabled(false);
                     strokeSpinner.setEnabled(false);
                     strokeSpinner.setValue(1);
                     checkBox.setEnabled(false);
+                    deleteButton.setEnabled(false);
+                    layerSpinner.setEnabled(false);
                 }
             }
         });
@@ -139,19 +180,12 @@ public class EditPanel extends JPanel {
                 parent.removeCreatingAdapters();
             }
         });
-        
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parent.deleteSelectedFigure();
-            }
-        });
-        add(deleteButton);
+
     }
 
     public void addFigure() {
         figureDefList.addElement(parent.figures().getLast().getType());
+        layerSpinnerModel.setMaximum(1);
     }
 
     public void clear() {
