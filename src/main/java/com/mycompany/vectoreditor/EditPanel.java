@@ -139,7 +139,15 @@ public class EditPanel extends JPanel {
                 parent.removeCreatingAdapters();
             }
         });
-
+        
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.deleteSelectedFigure();
+            }
+        });
+        add(deleteButton);
     }
 
     public void addFigure() {

@@ -145,6 +145,12 @@ public class MainFrame extends JFrame {
         editPanel.clear();
         canvas.repaint();
     }
+    
+    public void deleteSelectedFigure() {
+        figures.remove(selectedFigure);
+        selectedFigure = null;
+        canvas.repaint();
+    }
 
     public void removeCreatingAdapters() {
         canvas.removeCreatingAdapters();
