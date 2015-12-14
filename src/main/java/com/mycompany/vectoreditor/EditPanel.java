@@ -41,7 +41,6 @@ public class EditPanel extends JPanel {
     MainFrame parent;
     JList<String> figureList;
     DefaultListModel<String> figureDefList;
-    JScrollPane scrollpane;
     SpinnerNumberModel layerSpinnerModel;
 
     public EditPanel(final MainFrame parent) {
@@ -54,7 +53,7 @@ public class EditPanel extends JPanel {
         figureDefList = new DefaultListModel<String>();
         figureList = new JList<String>(figureDefList);
         figureList.setBorder(new LineBorder(Color.GRAY));
-        scrollpane = new JScrollPane(figureList);
+        JScrollPane scrollpane = new JScrollPane(figureList);
         scrollpane.setPreferredSize(new Dimension(128, 256));
         add(scrollpane);
 
@@ -117,12 +116,18 @@ public class EditPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 parent.deleteSelectedFigure(figureList.getSelectedIndex());
                 figureDefList.remove(figureList.getSelectedIndex());
+                int maximim = (int) layerSpinnerModel.getMaximum();
+                layerSpinnerModel.setMaximum(maximim - 1);
+                if (maximim == -1) {
+                    layerSpinnerModel.setMinimum(-1);
+                    layerSpinnerModel.setValue(-1);
+                }
             }
         });
         editPanel.add(deleteButton);
 
         JPanel layerPanel = new JPanel();
-        layerSpinnerModel = new SpinnerNumberModel(0, 0, 0, 1);
+        layerSpinnerModel = new SpinnerNumberModel(-1, -1, -1, 1);
         final JSpinner layerSpinner = new JSpinner(layerSpinnerModel);
         layerSpinner.setPreferredSize(parent.GetButtonDimension());
         layerSpinner.setEnabled(false);
@@ -131,9 +136,12 @@ public class EditPanel extends JPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int selectedIndex = figureList.getSelectedIndex();
-                int newIndex = (int) layerSpinner.getValue();
-                parent.changeLayer(selectedIndex, newIndex);
-                figureList.setSelectedIndex(newIndex);
+                if (selectedIndex != -1) {
+                    int newIndex = (int) layerSpinner.getValue();
+                    parent.changeLayer(selectedIndex, newIndex);
+                    rewriteList();
+                    figureList.setSelectedIndex(newIndex);
+                }
             }
         });
         JLabel layerLabel = new JLabel("layer");
@@ -163,7 +171,9 @@ public class EditPanel extends JPanel {
                     Figure selected = parent.getSelectedFigure();
                     strokeSpinner.setValue((int) selected.getStroke().getLineWidth());
                     checkBox.setSelected(selected.isFilled());
-                    layerSpinner.setValue(selectedIndex);
+                    if ((int) layerSpinner.getValue() != figureList.getSelectedIndex()) {
+                        layerSpinner.setValue(selectedIndex);
+                    }
                 } else {
                     colorButton.setEnabled(false);
                     strokeSpinner.setEnabled(false);
@@ -183,13 +193,28 @@ public class EditPanel extends JPanel {
 
     }
 
+    public void rewriteList() {
+        figureDefList.clear();
+        for (Figure elem : parent.figures()) {
+            figureDefList.addElement(elem.getType());
+        }
+    }
+
     public void addFigure() {
         figureDefList.addElement(parent.figures().getLast().getType());
-        layerSpinnerModel.setMaximum(1);
+        int maximum = (int) layerSpinnerModel.getMaximum();
+        int minimum = (int) layerSpinnerModel.getMinimum();
+        if (minimum == -1) {
+            layerSpinnerModel.setMinimum(0);
+        }
+        layerSpinnerModel.setMaximum(maximum + 1);
     }
 
     public void clear() {
         figureDefList.clear();
+        layerSpinnerModel.setMinimum(-1);
+        layerSpinnerModel.setMaximum(-1);
+        layerSpinnerModel.setValue(-1);
     }
 
     public void clearSelection() {

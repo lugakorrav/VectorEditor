@@ -175,8 +175,9 @@ public class MainFrame extends JFrame {
     }
 
     public void changeLayer(int oldLayer, int newLayer) {
-        figures.add(newLayer, selectedFigure);
         figures.remove(oldLayer);
+        figures.add(newLayer, selectedFigure);
+        canvas.repaint();
     }
 
     public Figure getSelectedFigure() {
