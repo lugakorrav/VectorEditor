@@ -6,6 +6,7 @@
 package com.mycompany.vectoreditor.primitives;
 
 import com.mycompany.vectoreditor.Figure;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,8 +17,9 @@ import java.awt.Graphics2D;
  */
 public class Line extends Figure {
 
-    public Line(int beginX, int beginY, int endX, int endY, Color color) {
-        super(beginX, beginY, endX, endY, color);
+    public Line(int beginX, int beginY, int endX, int endY,
+            Color color, BasicStroke stroke, boolean filled) {
+        super(beginX, beginY, endX, endY, color, stroke, filled);
         type = new String("Line");
     }
 

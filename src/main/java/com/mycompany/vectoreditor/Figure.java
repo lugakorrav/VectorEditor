@@ -9,6 +9,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  *
@@ -16,34 +18,38 @@ import java.awt.Graphics2D;
  */
 public class Figure implements Cloneable {
 
+    protected String type;
     protected Color color;
     protected BasicStroke stroke;
     protected boolean filled;
-    protected String type;
     protected boolean selected;
 
-    private int handleRadius = 8;
-    private Color dashColor = Color.BLUE;
-    private Color solidColor = Color.WHITE;
-    private Color handleFilledColor = Color.GREEN;
-    private Color handleBorderColor = Color.BLACK;
+    static private int handleRadius = 8;
+    static private int handleVisibleRadius = 8;
+    static private Color dashColor = Color.BLUE;
+    static private Color solidColor = Color.WHITE;
+    static private Color handleFilledColor = Color.GREEN;
+    static private Color handleBorderColor = Color.BLACK;
 
     protected int beginX, beginY, endX, endY;
 
-    public Figure(int beginX, int beginY, int endX, int endY, Color color) {
+    public Figure(int beginX, int beginY, int endX, int endY,
+            Color color, BasicStroke stroke, boolean filled) {
+        this.color = color;
+        this.stroke = stroke;
+        this.filled = filled;
         this.beginX = beginX;
         this.beginY = beginY;
         this.endX = endX;
         this.endY = endY;
-        this.color = color;
     }
 
     public Figure() {
+        this.color = Color.RED;
         this.beginX = 0;
         this.beginY = 0;
         this.endX = 0;
         this.endY = 0;
-        this.color = Color.RED;
     }
 
     @Override
@@ -116,15 +122,15 @@ public class Figure implements Cloneable {
     public int getHandleRadius() {
         return handleRadius;
     }
-    
-    public Color getColor () {
+
+    public Color getColor() {
         return color;
     }
-    
+
     public BasicStroke getStroke() {
         return stroke;
     }
-    
+
     public boolean isFilled() {
         return filled;
     }
@@ -138,13 +144,13 @@ public class Figure implements Cloneable {
     public boolean cornerHandleContains(int x, int y) {
         int dx = Math.abs(x - endX);
         int dy = Math.abs(y - endY);
-        return (Math.pow(dx, 2) + Math.pow(dy, 2) < handleRadius);
+        return (Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(handleRadius, 2));
     }
 
     public boolean centerHandleContains(int x, int y) {
         int dx = Math.abs(x - (endX + beginX) / 2);
         int dy = Math.abs(y - (endY + beginY) / 2);
-        return (Math.pow(dx, 2) + Math.pow(dy, 2) < handleRadius);
+        return (Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(handleRadius, 2));
     }
 
     public void paintBorder(Graphics g) {
@@ -174,13 +180,24 @@ public class Figure implements Cloneable {
 
         g2d.setStroke(new BasicStroke());
         g2d.setColor(handleFilledColor);
-        int offset = handleRadius / 2;
-        g2d.fillOval(endX - offset, endY - offset, handleRadius, handleRadius);
+        int offset = handleVisibleRadius / 2;
+        g2d.fillOval(endX - offset, endY - offset, handleVisibleRadius, handleVisibleRadius);
         g2d.fillOval((endX + beginX) / 2 - offset,
-                (endY + beginY) / 2 - offset, handleRadius, handleRadius);
+                (endY + beginY) / 2 - offset, handleVisibleRadius, handleVisibleRadius);
         g2d.setColor(handleBorderColor);
-        g2d.drawOval(endX - offset, endY - offset, handleRadius, handleRadius);
+        g2d.drawOval(endX - offset, endY - offset, handleVisibleRadius, handleVisibleRadius);
         g2d.drawOval((endX + beginX) / 2 - offset,
-                (endY + beginY) / 2 - offset, handleRadius, handleRadius);
+                (endY + beginY) / 2 - offset, handleVisibleRadius, handleVisibleRadius);
+    }
+
+    public void write(FileOutputStream fout) {
+        fout.println(color);
+        fout.println(stroke);
+        fout.println(filled);
+        fout.println(beginX);
+        fout.println(beginY);
+        fout.println(endX);
+        fout.println(endY);
+        fout.println(type);
     }
 }

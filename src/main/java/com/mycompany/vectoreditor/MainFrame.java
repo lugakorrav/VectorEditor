@@ -5,10 +5,23 @@
  */
 package com.mycompany.vectoreditor;
 
+import com.mycompany.vectoreditor.primitives.Rectangle;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import javax.swing.*;
 
@@ -19,8 +32,9 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
 
     private Canvas canvas;
-    private Toolbar toolbar;
+    private CreatePanel createPanel;
     private EditPanel editPanel;
+    private MenuBar menuBar;
 
     private LinkedList<Figure> figures;
 
@@ -49,8 +63,9 @@ public class MainFrame extends JFrame {
 
         figures = new LinkedList<Figure>();
         canvas = new Canvas(this);
-        toolbar = new Toolbar(this);
+        createPanel = new CreatePanel(this);
         editPanel = new EditPanel(this);
+        menuBar = new MenuBar(this);
 
         setSize(800, 600);
         setMinimumSize(new Dimension(400, 400));
@@ -59,8 +74,9 @@ public class MainFrame extends JFrame {
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
 
+        setJMenuBar(menuBar);
         add(canvas, BorderLayout.CENTER);
-        add(toolbar, BorderLayout.NORTH);
+        add(createPanel, BorderLayout.NORTH);
         add(editPanel, BorderLayout.WEST);
     }
 
@@ -136,7 +152,7 @@ public class MainFrame extends JFrame {
         filled = b;
     }
 
-    public Dimension GetButtonDimension() {
+    public Dimension getButtonDimension() {
         return buttonDimension;
     }
 
@@ -147,7 +163,6 @@ public class MainFrame extends JFrame {
     }
 
     public void deleteSelectedFigure(int index) {
-        System.out.println(figures.remove(index));
         selectedFigure = null;
         canvas.repaint();
     }
@@ -171,7 +186,6 @@ public class MainFrame extends JFrame {
 
         selectedFigure = figures.get(index);
         selectedFigure.setSelected(true);
-        System.out.println(index);
     }
 
     public void changeLayer(int oldLayer, int newLayer) {
@@ -192,6 +206,37 @@ public class MainFrame extends JFrame {
 
     public void editFigure() {
         canvas.editFigure();
+    }
+
+    public void saveAs() throws FileNotFoundException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showSaveDialog(null);
+        File file = fileChooser.getSelectedFile();
+        if (file != null) {
+            FileOutputStream fout = new FileOutputStream(file);
+            for (Figure elem : figures()) {
+                elem.write(fout);
+            }
+        }
+    }
+
+    public void open() throws FileNotFoundException, IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showOpenDialog(null);
+        File file = fileChooser.getSelectedFile();
+        if (file != null) {
+            BufferedReader fin = new BufferedReader(new FileReader(file));
+            while (true) {
+                
+                
+                String type = new String();
+                type = fin.readLine();
+                switch (type) {
+                    case "Rectangle":
+                        Rectangle rectangle = new Rectangle
+                }
+            }
+        }
     }
 
 }

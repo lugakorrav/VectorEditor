@@ -26,11 +26,11 @@ import javax.swing.event.ChangeListener;
  *
  * @author Гриха
  */
-public class Toolbar extends JPanel {
+public class CreatePanel extends JPanel {
 
     private MainFrame parent;
 
-    public Toolbar(MainFrame aparent) {
+    public CreatePanel(MainFrame aparent) {
 
         super();
         parent = aparent;
@@ -44,7 +44,7 @@ public class Toolbar extends JPanel {
         add(lineButton);
         
         JButton colorButton = new JButton("Color");
-        colorButton.setPreferredSize(parent.GetButtonDimension());
+        colorButton.setPreferredSize(parent.getButtonDimension());
         colorButton.addActionListener(new ActionListener() {
 
             @Override
@@ -53,6 +53,8 @@ public class Toolbar extends JPanel {
             }
         });
         add(colorButton);
+        
+        JButton backgroundButton = new JButton("Background");
 
         JPanel strokeSet = new JPanel();
         final JSpinner strokeSpinner = new JSpinner();
@@ -90,11 +92,10 @@ public class Toolbar extends JPanel {
         fillSet.setLayout(fillSetLayout);
         fillSet.add(checkBox);
         fillSet.add(fillLabel);
-        
         add(fillSet);
         
         JButton clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(parent.GetButtonDimension());
+        clearButton.setPreferredSize(parent.getButtonDimension());
         clearButton.addActionListener(new ActionListener() {
 
             @Override

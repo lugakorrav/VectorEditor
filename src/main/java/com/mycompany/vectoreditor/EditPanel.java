@@ -65,7 +65,7 @@ public class EditPanel extends JPanel {
 
         final JButton colorButton = new JButton("Color");
         colorButton.setEnabled(false);
-        colorButton.setPreferredSize(parent.GetButtonDimension());
+        colorButton.setPreferredSize(parent.getButtonDimension());
         colorButton.addActionListener(new ActionListener() {
 
             @Override
@@ -77,7 +77,7 @@ public class EditPanel extends JPanel {
 
         JPanel strokeSet = new JPanel();
         final JSpinner strokeSpinner = new JSpinner();
-        strokeSpinner.setPreferredSize(parent.GetButtonDimension());
+        strokeSpinner.setPreferredSize(parent.getButtonDimension());
         strokeSpinner.setEnabled(false);
         strokeSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
         strokeSpinner.addChangeListener(new ChangeListener() {
@@ -129,7 +129,7 @@ public class EditPanel extends JPanel {
         JPanel layerPanel = new JPanel();
         layerSpinnerModel = new SpinnerNumberModel(-1, -1, -1, 1);
         final JSpinner layerSpinner = new JSpinner(layerSpinnerModel);
-        layerSpinner.setPreferredSize(parent.GetButtonDimension());
+        layerSpinner.setPreferredSize(parent.getButtonDimension());
         layerSpinner.setEnabled(false);
         layerSpinner.addChangeListener(new ChangeListener() {
 
