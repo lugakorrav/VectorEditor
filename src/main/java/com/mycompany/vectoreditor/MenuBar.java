@@ -8,6 +8,7 @@ package com.mycompany.vectoreditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -43,6 +44,17 @@ public class MenuBar extends JMenuBar {
                     parent.saveAs();
                 } catch (FileNotFoundException ex) {
 
+                } catch (IOException ex) {
+                }
+            }
+        });
+        
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    parent.open();
+                } catch (IOException ex) {
                 }
             }
         });

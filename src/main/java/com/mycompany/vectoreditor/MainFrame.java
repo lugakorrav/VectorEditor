@@ -5,6 +5,8 @@
  */
 package com.mycompany.vectoreditor;
 
+import com.mycompany.vectoreditor.primitives.Line;
+import com.mycompany.vectoreditor.primitives.Oval;
 import com.mycompany.vectoreditor.primitives.Rectangle;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -13,6 +15,7 @@ import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,8 +24,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+import java.util.Scanner;
 import javax.swing.*;
 
 /**
@@ -208,14 +214,14 @@ public class MainFrame extends JFrame {
         canvas.editFigure();
     }
 
-    public void saveAs() throws FileNotFoundException {
+    public void saveAs() throws FileNotFoundException, IOException {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showSaveDialog(null);
         File file = fileChooser.getSelectedFile();
         if (file != null) {
-            FileOutputStream fout = new FileOutputStream(file);
+            PrintStream oStream = new PrintStream(file);
             for (Figure elem : figures()) {
-                elem.write(fout);
+                elem.write(oStream);
             }
         }
     }
@@ -225,18 +231,45 @@ public class MainFrame extends JFrame {
         fileChooser.showOpenDialog(null);
         File file = fileChooser.getSelectedFile();
         if (file != null) {
-            BufferedReader fin = new BufferedReader(new FileReader(file));
-            while (true) {
-                
-                
+            clear();
+            removeCreatingAdapters();
+            removeEditingAdapters();
+            Scanner iStream = new Scanner(file);
+            while (iStream.hasNext()) {
+                int srokeWidth = iStream.nextInt();
+                System.out.println(srokeWidth);
+                BasicStroke stroke = new BasicStroke(srokeWidth);
+                boolean filled = iStream.nextBoolean();
+                int beginX = iStream.nextInt();
+                int beginY = iStream.nextInt();
+                int endX = iStream.nextInt();
+                int endY = iStream.nextInt();
+                int rgb = iStream.nextInt();
+                Color color = new Color(rgb);
+                System.out.println(rgb);
+
                 String type = new String();
-                type = fin.readLine();
+                type = iStream.next();
+                System.out.println(type);
                 switch (type) {
                     case "Rectangle":
-                        Rectangle rectangle = new Rectangle
+                        Rectangle rectangle = new Rectangle(beginX, beginY,
+                                endX, endY, color, stroke, filled);
+                        figures.addLast(rectangle);
+                        break;
+                    case "Oval":
+                        Oval oval = new Oval(beginX, beginY, endX, endY,
+                                color, stroke, filled);
+                        figures.addLast(oval);
+                        break;
+                    case "Line":
+                        Line line = new Line(beginX, beginY, endX, endY,
+                                color, stroke, filled);
+                        figures.addLast(line);
+                        break;
                 }
+                editPanel.addFigure();
             }
         }
     }
-
 }

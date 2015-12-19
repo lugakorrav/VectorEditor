@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 
 /**
@@ -190,14 +191,22 @@ public class Figure implements Cloneable {
                 (endY + beginY) / 2 - offset, handleVisibleRadius, handleVisibleRadius);
     }
 
-    public void write(FileOutputStream fout) {
-        fout.println(color);
-        fout.println(stroke);
-        fout.println(filled);
-        fout.println(beginX);
-        fout.println(beginY);
-        fout.println(endX);
-        fout.println(endY);
-        fout.println(type);
+    public void write(PrintStream oStream) {
+        oStream.print((int)stroke.getLineWidth());
+        oStream.print(" ");
+        oStream.print(filled);
+        oStream.print(" ");
+        oStream.print(beginX);
+        oStream.print(" ");
+        oStream.print(beginY);
+        oStream.print(" ");
+        oStream.print(endX);
+        oStream.print(" ");
+        oStream.print(endY);
+        oStream.print(" ");
+        oStream.print(color.getRGB());
+        oStream.print(" ");
+        oStream.print(type);
+        oStream.print(" ");
     }
 }
