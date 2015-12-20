@@ -12,24 +12,15 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 /**
  *
@@ -58,12 +49,14 @@ public class MainFrame extends JFrame {
     private boolean filled;
     private Figure selectedFigure;
     private Dimension buttonDimension;
+    String fileExtension;
 
     public MainFrame(String s) {
         super(s);
         mode = MODE.NONE;
         mainColor = Color.BLACK;
         mainStroke = new BasicStroke(1);
+        fileExtension = new String(".vdg");
         filled = false;
         buttonDimension = new Dimension(72, 24);
 
@@ -119,6 +112,15 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void setBackgroundColor() {
+        Color color = JColorChooser.showDialog(null,
+                "Choose the color", canvas.getBackground());
+        if (color != null) {
+            canvas.setBackground(color);
+            canvas.repaint();
+        }
+    }
+
     public void setFigureColor() {
         Color color = JColorChooser.showDialog(null,
                 "Choose the color", selectedFigure.getColor());
@@ -169,6 +171,7 @@ public class MainFrame extends JFrame {
     }
 
     public void deleteSelectedFigure(int index) {
+        figures.remove(selectedFigure);
         selectedFigure = null;
         canvas.repaint();
     }
@@ -216,60 +219,103 @@ public class MainFrame extends JFrame {
 
     public void saveAs() throws FileNotFoundException, IOException {
         JFileChooser fileChooser = new JFileChooser();
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getAbsolutePath().endsWith(fileExtension);
+            }
+
+            @Override
+            public String getDescription() {
+                return fileExtension;
+            }
+        };
+        fileChooser.setFileFilter(fileFilter);
         fileChooser.showSaveDialog(null);
         File file = fileChooser.getSelectedFile();
         if (file != null) {
+            String path = file.getAbsolutePath();
+            if (!path.endsWith(fileExtension)) {
+                file = new File(path + fileExtension);
+            }
             PrintStream oStream = new PrintStream(file);
+            oStream.print(canvas.getBackground().getRGB());
+            oStream.print(" ");
             for (Figure elem : figures()) {
                 elem.write(oStream);
             }
+            oStream.close();
         }
     }
 
     public void open() throws FileNotFoundException, IOException {
         JFileChooser fileChooser = new JFileChooser();
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getAbsolutePath().endsWith(fileExtension);
+            }
+
+            @Override
+            public String getDescription() {
+                return fileExtension;
+            }
+        };
+        fileChooser.setFileFilter(fileFilter);
+        fileChooser.setFileFilter(fileFilter);
         fileChooser.showOpenDialog(null);
         File file = fileChooser.getSelectedFile();
         if (file != null) {
             clear();
             removeCreatingAdapters();
             removeEditingAdapters();
-            Scanner iStream = new Scanner(file);
-            while (iStream.hasNext()) {
-                int srokeWidth = iStream.nextInt();
-                System.out.println(srokeWidth);
-                BasicStroke stroke = new BasicStroke(srokeWidth);
-                boolean filled = iStream.nextBoolean();
-                int beginX = iStream.nextInt();
-                int beginY = iStream.nextInt();
-                int endX = iStream.nextInt();
-                int endY = iStream.nextInt();
-                int rgb = iStream.nextInt();
-                Color color = new Color(rgb);
-                System.out.println(rgb);
-
-                String type = new String();
-                type = iStream.next();
-                System.out.println(type);
-                switch (type) {
-                    case "Rectangle":
-                        Rectangle rectangle = new Rectangle(beginX, beginY,
-                                endX, endY, color, stroke, filled);
-                        figures.addLast(rectangle);
-                        break;
-                    case "Oval":
-                        Oval oval = new Oval(beginX, beginY, endX, endY,
-                                color, stroke, filled);
-                        figures.addLast(oval);
-                        break;
-                    case "Line":
-                        Line line = new Line(beginX, beginY, endX, endY,
-                                color, stroke, filled);
-                        figures.addLast(line);
-                        break;
+            Scanner scanner = new Scanner(file);
+            try {
+                if (scanner.hasNext()) {
+                    Color backGroundColor = new Color(scanner.nextInt());
+                    canvas.setBackground(backGroundColor);
                 }
-                editPanel.addFigure();
+                while (scanner.hasNext()) {
+                    int srokeWidth = scanner.nextInt();
+                    BasicStroke stroke = new BasicStroke(srokeWidth);
+                    boolean filled = scanner.nextBoolean();
+                    int beginX = scanner.nextInt();
+                    int beginY = scanner.nextInt();
+                    int endX = scanner.nextInt();
+                    int endY = scanner.nextInt();
+                    int rgb = scanner.nextInt();
+                    Color color = new Color(rgb);
+
+                    String type = new String();
+                    type = scanner.next();
+                    switch (type) {
+                        case "Rectangle":
+                            Rectangle rectangle = new Rectangle(beginX, beginY,
+                                    endX, endY, color, stroke, filled);
+                            figures.addLast(rectangle);
+                            break;
+                        case "Oval":
+                            Oval oval = new Oval(beginX, beginY, endX, endY,
+                                    color, stroke, filled);
+                            figures.addLast(oval);
+                            break;
+                        case "Line":
+                            Line line = new Line(beginX, beginY, endX, endY,
+                                    color, stroke, filled);
+                            figures.addLast(line);
+                            break;
+                    }
+                    editPanel.addFigure();
+                }
+            } catch (InputMismatchException ex) {
+                clear();
+                canvas.setBackground(Color.WHITE);
+                removeCreatingAdapters();
+                removeEditingAdapters();
+                JOptionPane.showMessageDialog(null, "Corrupted file");
+                return;
             }
+            scanner.close();
         }
     }
 }

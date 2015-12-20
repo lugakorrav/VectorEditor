@@ -9,8 +9,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 
 /**
@@ -192,7 +190,7 @@ public class Figure implements Cloneable {
     }
 
     public void write(PrintStream oStream) {
-        oStream.print((int)stroke.getLineWidth());
+        oStream.print((int) stroke.getLineWidth());
         oStream.print(" ");
         oStream.print(filled);
         oStream.print(" ");
@@ -207,6 +205,6 @@ public class Figure implements Cloneable {
         oStream.print(color.getRGB());
         oStream.print(" ");
         oStream.print(type);
-        oStream.print(" ");
+        oStream.println(" ");
     }
 }

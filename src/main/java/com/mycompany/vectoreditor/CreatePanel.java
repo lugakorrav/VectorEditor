@@ -42,7 +42,7 @@ public class CreatePanel extends JPanel {
         add(rectButton);
         add(ovalButton);
         add(lineButton);
-        
+
         JButton colorButton = new JButton("Color");
         colorButton.setPreferredSize(parent.getButtonDimension());
         colorButton.addActionListener(new ActionListener() {
@@ -53,8 +53,15 @@ public class CreatePanel extends JPanel {
             }
         });
         add(colorButton);
-        
+
         JButton backgroundButton = new JButton("Background");
+        backgroundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.setBackgroundColor();
+            }
+        });
+        add(backgroundButton);
 
         JPanel strokeSet = new JPanel();
         final JSpinner strokeSpinner = new JSpinner();
@@ -72,7 +79,7 @@ public class CreatePanel extends JPanel {
         strokeSet.add(strokeSpinner);
         strokeSet.add(strokeLabel);
         add(strokeSet);
-        
+
         JPanel fillSet = new JPanel();
         final JCheckBox checkBox = new JCheckBox();
         checkBox.addActionListener(new ActionListener() {
@@ -81,8 +88,7 @@ public class CreatePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (checkBox.isSelected()) {
                     parent.setFilled(Boolean.TRUE);
-                }
-                else {
+                } else {
                     parent.setFilled(Boolean.FALSE);
                 }
             }
@@ -93,7 +99,7 @@ public class CreatePanel extends JPanel {
         fillSet.add(checkBox);
         fillSet.add(fillLabel);
         add(fillSet);
-        
+
         JButton clearButton = new JButton("Clear");
         clearButton.setPreferredSize(parent.getButtonDimension());
         clearButton.addActionListener(new ActionListener() {
@@ -106,6 +112,6 @@ public class CreatePanel extends JPanel {
             }
         });
         add(clearButton);
-        
+
     }
 }

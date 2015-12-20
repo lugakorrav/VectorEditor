@@ -40,7 +40,7 @@ public class Canvas extends JPanel {
         creatingMouseMotionAdapters = new ArrayList<MouseMotionAdapter>();
         editingMouseAdapters = new ArrayList<MouseAdapter>();
         editingMouseMotionAdapters = new ArrayList<MouseMotionAdapter>();
-        setBackground(Color.white);
+        setBackground(Color.WHITE);
         setBorder(new LineBorder(Color.GRAY));
 
         ActionListener timerListener = new ActionListener() {

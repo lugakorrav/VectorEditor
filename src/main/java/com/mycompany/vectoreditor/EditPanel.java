@@ -24,7 +24,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -109,23 +108,6 @@ public class EditPanel extends JPanel {
         });
         editPanel.add(checkBox, BorderLayout.CENTER);
 
-        final JButton deleteButton = new JButton("Delete");
-        deleteButton.setEnabled(false);
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parent.deleteSelectedFigure(figureList.getSelectedIndex());
-                figureDefList.remove(figureList.getSelectedIndex());
-                int maximim = (int) layerSpinnerModel.getMaximum();
-                layerSpinnerModel.setMaximum(maximim - 1);
-                if (maximim == -1) {
-                    layerSpinnerModel.setMinimum(-1);
-                    layerSpinnerModel.setValue(-1);
-                }
-            }
-        });
-        editPanel.add(deleteButton);
-
         JPanel layerPanel = new JPanel();
         layerSpinnerModel = new SpinnerNumberModel(-1, -1, -1, 1);
         final JSpinner layerSpinner = new JSpinner(layerSpinnerModel);
@@ -150,6 +132,23 @@ public class EditPanel extends JPanel {
         layerPanel.add(layerSpinner);
         layerPanel.add(layerLabel);
         editPanel.add(layerPanel, BorderLayout.SOUTH);
+
+        final JButton deleteButton = new JButton("Delete");
+        deleteButton.setEnabled(false);
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.deleteSelectedFigure(figureList.getSelectedIndex());
+                figureDefList.remove(figureList.getSelectedIndex());
+                int maximim = (int) layerSpinnerModel.getMaximum();
+                layerSpinnerModel.setMaximum(maximim - 1);
+                if (maximim == -1) {
+                    layerSpinnerModel.setMinimum(-1);
+                    layerSpinnerModel.setValue(-1);
+                }
+            }
+        });
+        editPanel.add(deleteButton);
 
         figureList.addListSelectionListener(new ListSelectionListener() {
 
