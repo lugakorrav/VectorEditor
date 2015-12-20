@@ -12,11 +12,14 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 import javax.swing.*;
@@ -33,17 +36,8 @@ public class MainFrame extends JFrame {
     private EditPanel editPanel;
     private MenuBar menuBar;
 
-    private LinkedList<Figure> figures;
-
-    public enum MODE {
-
-        NONE,
-        RECT,
-        OVAL;
-    }
-
-    MODE mode;
-
+    private ArrayList<Figure> figures;
+    
     private Color mainColor;
     private BasicStroke mainStroke;
     private boolean filled;
@@ -53,14 +47,13 @@ public class MainFrame extends JFrame {
 
     public MainFrame(String s) {
         super(s);
-        mode = MODE.NONE;
         mainColor = Color.BLACK;
         mainStroke = new BasicStroke(1);
         fileExtension = new String(".vdg");
         filled = false;
         buttonDimension = new Dimension(72, 24);
 
-        figures = new LinkedList<Figure>();
+        figures = new ArrayList<Figure>();
         canvas = new Canvas(this);
         createPanel = new CreatePanel(this);
         editPanel = new EditPanel(this);
@@ -79,25 +72,17 @@ public class MainFrame extends JFrame {
         add(editPanel, BorderLayout.WEST);
     }
 
-    public LinkedList<Figure> figures() {
+    public ArrayList<Figure> figures() {
         return figures;
     }
 
     public void addFigure(Figure f) {
-        figures.addLast(f);
+        figures.add(f);
         editPanel.addFigure();
     }
 
     public void createFigure(Figure f) {
         canvas.createFigure(f);
-    }
-
-    public MODE getMode() {
-        return mode;
-    }
-
-    public void setMode(MODE m) {
-        mode = m;
     }
 
     public Color getMainColor() {
@@ -170,7 +155,7 @@ public class MainFrame extends JFrame {
         canvas.repaint();
     }
 
-    public void deleteSelectedFigure(int index) {
+    public void deleteSelectedFigure() {
         figures.remove(selectedFigure);
         selectedFigure = null;
         canvas.repaint();
@@ -292,17 +277,17 @@ public class MainFrame extends JFrame {
                         case "Rectangle":
                             Rectangle rectangle = new Rectangle(beginX, beginY,
                                     endX, endY, color, stroke, filled);
-                            figures.addLast(rectangle);
+                            figures.add(rectangle);
                             break;
                         case "Oval":
                             Oval oval = new Oval(beginX, beginY, endX, endY,
                                     color, stroke, filled);
-                            figures.addLast(oval);
+                            figures.add(oval);
                             break;
                         case "Line":
                             Line line = new Line(beginX, beginY, endX, endY,
                                     color, stroke, filled);
-                            figures.addLast(line);
+                            figures.add(line);
                             break;
                     }
                     editPanel.addFigure();
@@ -316,6 +301,28 @@ public class MainFrame extends JFrame {
                 return;
             }
             scanner.close();
+        }
+    }
+
+    public void removeInvisible() {
+        Iterator<Figure> it = figures.iterator();
+        while (it.hasNext()) {
+            Figure elem = it.next();
+            int beginX = elem.getBeginX();
+            int beginY = elem.getBeginY();
+            int endX = elem.getEndX();
+            int endY = elem.getEndY();
+            Point p1 = new Point(beginX, beginY);
+            Point p2 = new Point(endX, endY);
+            Point p3 = new Point(beginX, endY);
+            Point p4 = new Point(endX, beginY);
+
+            if (!(canvas.contains(p1) || canvas.contains(p2)
+                    || canvas.contains(p3) || canvas.contains(p4))) {
+                it.remove();
+                editPanel.rewriteList();
+                canvas.repaint();
+            }
         }
     }
 }

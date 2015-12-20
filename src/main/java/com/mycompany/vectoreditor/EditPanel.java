@@ -138,7 +138,7 @@ public class EditPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parent.deleteSelectedFigure(figureList.getSelectedIndex());
+                parent.deleteSelectedFigure();
                 figureDefList.remove(figureList.getSelectedIndex());
                 int maximim = (int) layerSpinnerModel.getMaximum();
                 layerSpinnerModel.setMaximum(maximim - 1);
@@ -200,7 +200,7 @@ public class EditPanel extends JPanel {
     }
 
     public void addFigure() {
-        figureDefList.addElement(parent.figures().getLast().getType());
+        figureDefList.addElement(parent.figures().get(parent.figures().size() - 1).getType());
         int maximum = (int) layerSpinnerModel.getMaximum();
         int minimum = (int) layerSpinnerModel.getMinimum();
         if (minimum == -1) {
